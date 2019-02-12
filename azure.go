@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"reflect"
+	"time"
 
 	"github.com/Azure/azure-sdk-for-go/services/preview/monitor/mgmt/2018-11-01-preview/insights"
 	"github.com/Azure/go-autorest/autorest/azure"
@@ -45,8 +47,13 @@ func metricsList(ctx context.Context, params *metricsListInput) (insights.Respon
 	)
 }
 
-func FetchMetricData(ctx context.Context, subscriptionID, resourceGroup, namespace, resource, metricName, aggregation string) error {
+// FetchMetricData returns metric data
+func FetchMetricData(ctx context.Context, subscriptionID, resourceGroup, namespace, resource, metricName, aggregation string) (*insights.MetricValue, error) {
 	pt1m := "PT1M"
+
+	endTime := time.Now().UTC()
+	startTime := endTime.Add(time.Duration(-5) * time.Minute)
+	timespan := fmt.Sprintf("%s/%s", startTime.Format(time.RFC3339), endTime.Format(time.RFC3339))
 
 	input := &metricsListInput{
 		subscriptionID: subscriptionID,
@@ -56,6 +63,7 @@ func FetchMetricData(ctx context.Context, subscriptionID, resourceGroup, namespa
 			namespace,
 			resource,
 		),
+		timespan:    timespan,
 		interval:    &pt1m,
 		aggregation: aggregation,
 		metricnames: metricName,
@@ -63,24 +71,30 @@ func FetchMetricData(ctx context.Context, subscriptionID, resourceGroup, namespa
 	}
 	res, err := metricsList(ctx, input)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	var latestData *insights.MetricValue
+	var latestData insights.MetricValue
 	for _, v := range *res.Value {
 		for _, elem := range *v.Timeseries {
 			for _, d := range *elem.Data {
-				if latestData == nil {
-					latestData = &d
+				rv := reflect.ValueOf(d)
+				av := rv.FieldByName(aggregation)
+				if av.IsNil() {
+					continue
+				}
+
+				if latestData.TimeStamp == nil {
+					latestData = d
 					continue
 				}
 
 				if d.TimeStamp.After(latestData.TimeStamp.Time) {
-					latestData = &d
+					latestData = d
 				}
 			}
 		}
 	}
 
-	return nil
+	return &latestData, nil
 }

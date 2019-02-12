@@ -19,7 +19,7 @@ A tool for Azure Monitor at Microsoft Azure that possible to collects metrics, a
 - `--metric-name`
     - Set the name of the metric
 - `--aggregation`
-    - Set the aggregation type
+    - Set the aggregation type. Choose from "Total", "Average", "Maximum", "Minimum" ("Count" is not supported)"
 - `--auth-file`
     - Set the azure auth file path (default "/etc/nagios/azure.auth")
     - See also [Authentication](#authentication)
@@ -35,7 +35,7 @@ azmon <global options> check --warning <warning threshold> --critical <critical 
 `metrics`
 
 ```
-azmon <global options> metrics
+azmon <global options> metrics [--prefix <metric prefix key>]
 ```
 
 
