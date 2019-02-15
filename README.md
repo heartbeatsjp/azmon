@@ -29,7 +29,7 @@ A tool for Azure Monitor at Microsoft Azure that possible to collects metrics, a
 `check`
 
 ```
-azmon <global options> check --warning <warning threshold> --critical <critical threshold>
+azmon <global options> check --warning-over <warning threshold> --critical-over <critical threshold>
 ```
 
 `metrics`

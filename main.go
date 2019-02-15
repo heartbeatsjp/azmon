@@ -97,16 +97,28 @@ func main() {
 			Name:  "check",
 			Usage: "check metric(as Nagios plugin)",
 			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:  "warning,w",
+				cli.Float64Flag{
+					Name:  "warning-over, w",
 					Usage: "Set the warning threshold",
+					Value: 0,
 				},
-				cli.StringFlag{
-					Name:  "critical,c",
+				cli.Float64Flag{
+					Name:  "warning-under, W",
+					Usage: "Set the warning threshold",
+					Value: 0,
+				},
+				cli.Float64Flag{
+					Name:  "critical-over, c",
 					Usage: "Set the critical threshold",
+					Value: 0,
+				},
+				cli.Float64Flag{
+					Name:  "critical-under, C",
+					Usage: "Set the critical threshold",
+					Value: 0,
 				},
 			},
-			Action: func(c *cli.Context) error { return nil },
+			Action: Check,
 		},
 		{
 			Name:  "metric",
