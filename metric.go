@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/urfave/cli"
@@ -11,10 +10,6 @@ import (
 
 func Metric(c *cli.Context) error {
 	input := buildFetchMetricDataInput(c)
-
-	if err := os.Setenv("AZURE_AUTH_LOCATION", c.GlobalString("auth-file")); err != nil {
-		fmt.Println("set environment variable (AZURE_AUTH_LOCATION) failed")
-	}
 
 	v, err := FetchMetricData(
 		context.TODO(),
