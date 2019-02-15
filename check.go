@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/urfave/cli"
 )
@@ -15,6 +16,15 @@ const (
 )
 
 func Check(c *cli.Context) error {
+	if c.String("metric-name") == "" {
+		return cli.NewExitError("missing metric-name", UNKNOWN)
+	}
+
+	if strings.Contains(c.String("metric-name"), ",") {
+		//TODO: error message
+		return cli.NewExitError("TODO", UNKNOWN)
+	}
+
 	input := buildFetchMetricDataInput(c)
 
 	warningOver := c.Float64("warning-over")
@@ -23,10 +33,12 @@ func Check(c *cli.Context) error {
 	criticalOver := c.Float64("critical-over")
 	criticalUnder := c.Float64("critical-under")
 
-	v, err := FetchMetricData(context.TODO(), input)
+	metrics, err := FetchMetricData(context.TODO(), input)
 	if err != nil {
 		return cli.NewExitError(fmt.Errorf("fetch metric data failed: %s", err.Error()), UNKNOWN)
 	}
+
+	v := metrics[input.metricNames[0]]
 
 	var data float64
 	switch input.aggregation {
@@ -41,21 +53,21 @@ func Check(c *cli.Context) error {
 	}
 
 	if criticalOver != 0 && data > criticalOver {
-		return cli.NewExitError(fmt.Sprintf("CRITICAL - %s %s is %f that over than %f", input.resource, input.metricName, data, criticalOver), CRITICAL)
+		return cli.NewExitError(fmt.Sprintf("CRITICAL - %s %s is %f that over than %f", input.resource, input.metricNames[0], data, criticalOver), CRITICAL)
 	}
 
 	if criticalUnder != 0 && data < criticalUnder {
-		return cli.NewExitError(fmt.Sprintf("CRITICAL - %s %s is %f that under than %f", input.resource, input.metricName, data, criticalUnder), CRITICAL)
+		return cli.NewExitError(fmt.Sprintf("CRITICAL - %s %s is %f that under than %f", input.resource, input.metricNames[0], data, criticalUnder), CRITICAL)
 	}
 
 	if warningOver != 0 && data > warningOver {
-		return cli.NewExitError(fmt.Sprintf("WARNING - %s %s is %f that over than %f", input.resource, input.metricName, data, warningOver), WARNING)
+		return cli.NewExitError(fmt.Sprintf("WARNING - %s %s is %f that over than %f", input.resource, input.metricNames[0], data, warningOver), WARNING)
 	}
 
 	if warningUnder != 0 && data < warningUnder {
-		return cli.NewExitError(fmt.Sprintf("WARNING - %s %s is %f that under than %f", input.resource, input.metricName, data, warningUnder), WARNING)
+		return cli.NewExitError(fmt.Sprintf("WARNING - %s %s is %f that under than %f", input.resource, input.metricNames[0], data, warningUnder), WARNING)
 	}
 
-	fmt.Printf("OK - %s %s is %f", input.resource, input.metricName, data)
+	fmt.Printf("OK - %s %s is %f", input.resource, input.metricNames[0], data)
 	return nil
 }

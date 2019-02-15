@@ -14,18 +14,46 @@ type FetchMetricDataInput struct {
 	resourceGroup  string
 	namespace      string
 	resource       string
-	metricName     string
+	metricNames    []string
 	aggregation    string
 }
 
+type FetchMetricDefinitionsInput struct {
+	subscriptionID  string
+	resourceGroup   string
+	namespace       string
+	resource        string
+	resourceURI     string
+	metricnamespace string
+}
+
 func buildFetchMetricDataInput(c *cli.Context) FetchMetricDataInput {
+	//subCommand := strings.Split(c.Args().First(), " ")[0]
+	subCommand := c.Parent().Args().First()
+
+	var metricNames []string
+	if subCommand == "check" {
+		metricNames = []string{c.String("metric-name")}
+	} else if subCommand == "metric" {
+		metricNames = c.StringSlice("metric-names")
+	}
+
 	return FetchMetricDataInput{
 		subscriptionID: c.GlobalString("subscription-id"),
 		resourceGroup:  c.GlobalString("resource-group"),
 		namespace:      c.GlobalString("namespace"),
 		resource:       c.GlobalString("resource"),
-		metricName:     c.GlobalString("metric-name"),
+		metricNames:    metricNames,
 		aggregation:    c.GlobalString("aggregation"),
+	}
+}
+
+func buildFetchMetricDefinitionsInput(c *cli.Context) FetchMetricDefinitionsInput {
+	return FetchMetricDefinitionsInput{
+		subscriptionID: c.GlobalString("subscription-id"),
+		resourceGroup:  c.GlobalString("resource-group"),
+		namespace:      c.GlobalString("namespace"),
+		resource:       c.GlobalString("resource"),
 	}
 }
 
@@ -44,10 +72,6 @@ func validationGlobalFlags(c *cli.Context) error {
 
 	if v := c.GlobalString("resource"); v == "" {
 		return errors.New("missing resource")
-	}
-
-	if v := c.GlobalString("metric-name"); v == "" {
-		return errors.New("missing metric-name")
 	}
 
 	if v := c.GlobalString("aggregation"); v == "" {
@@ -96,10 +120,6 @@ func main() {
 			Usage: "Set the target resource name",
 		},
 		cli.StringFlag{
-			Name:  "metric-name, m",
-			Usage: "Set the name of the metric",
-		},
-		cli.StringFlag{
 			Name:  "aggregation, a",
 			Usage: "Set the aggregation type. Choose from \"Total\", \"Average\", \"Maximum\", \"Minimum\" (\"Count\" is not supported)",
 		},
@@ -117,6 +137,10 @@ func main() {
 			Name:  "check",
 			Usage: "check metric(as Nagios plugin)",
 			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "metric-name, m",
+					Usage: "Set the name of the metric",
+				},
 				cli.Float64Flag{
 					Name:  "warning-over, w",
 					Usage: "Set the warning threshold",
@@ -144,6 +168,10 @@ func main() {
 			Name:  "metric",
 			Usage: "list metric data",
 			Flags: []cli.Flag{
+				cli.StringSliceFlag{
+					Name:  "metric-names, m",
+					Usage: "Set the names of the metric",
+				},
 				cli.StringFlag{
 					Name:  "prefix, p",
 					Usage: "Set the metric key prefix",
