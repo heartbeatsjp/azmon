@@ -10,12 +10,7 @@ import (
 )
 
 func Metric(c *cli.Context) error {
-	subscriptionID := c.GlobalString("subscription-id")
-	resourceGroup := c.GlobalString("resource-group")
-	namespace := c.GlobalString("namespace")
-	resource := c.GlobalString("resource")
-	metricName := c.GlobalString("metric-name")
-	aggregation := c.GlobalString("aggregation")
+	input := buildFetchMetricDataInput(c)
 
 	if err := os.Setenv("AZURE_AUTH_LOCATION", c.GlobalString("auth-file")); err != nil {
 		fmt.Println("set environment variable (AZURE_AUTH_LOCATION) failed")
@@ -23,12 +18,12 @@ func Metric(c *cli.Context) error {
 
 	v, err := FetchMetricData(
 		context.TODO(),
-		subscriptionID,
-		resourceGroup,
-		namespace,
-		resource,
-		metricName,
-		aggregation,
+		input.subscriptionID,
+		input.resourceGroup,
+		input.namespace,
+		input.resource,
+		input.metricName,
+		input.aggregation,
 	)
 	if err != nil {
 		return fmt.Errorf("fetch metric data failed: %s", err.Error())
@@ -36,13 +31,20 @@ func Metric(c *cli.Context) error {
 
 	prefix := c.String("prefix")
 	key := strings.Join(
-		[]string{prefix, strings.Replace(namespace, "/", ".", -1), metricName, resource, metricName, aggregation},
+		[]string{
+			prefix,
+			strings.Replace(input.namespace, "/", ".", -1),
+			input.metricName,
+			input.resource,
+			input.metricName,
+			input.aggregation,
+		},
 		".",
 	)
 	key = strings.Replace(key, " ", "", -1)
 
 	var data float64
-	switch aggregation {
+	switch input.aggregation {
 	case "Total":
 		data = *v.Total
 	case "Average":

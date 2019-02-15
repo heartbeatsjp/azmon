@@ -9,6 +9,26 @@ import (
 	"github.com/urfave/cli"
 )
 
+type FetchMetricDataInput struct {
+	subscriptionID string
+	resourceGroup  string
+	namespace      string
+	resource       string
+	metricName     string
+	aggregation    string
+}
+
+func buildFetchMetricDataInput(c *cli.Context) FetchMetricDataInput {
+	return FetchMetricDataInput{
+		subscriptionID: c.GlobalString("subscription-id"),
+		resourceGroup:  c.GlobalString("resource-group"),
+		namespace:      c.GlobalString("namespace"),
+		resource:       c.GlobalString("resource"),
+		metricName:     c.GlobalString("metric-name"),
+		aggregation:    c.GlobalString("aggregation"),
+	}
+}
+
 func validationGlobalFlags(c *cli.Context) error {
 	if v := c.GlobalString("subscription-id"); v == "" {
 		return errors.New("missing subscription-id")
