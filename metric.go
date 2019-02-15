@@ -30,15 +30,18 @@ func Metric(c *cli.Context) error {
 
 	for k, v := range metrics {
 		prefix := c.String("prefix")
-		metricKey := strings.Join(
-			[]string{
-				prefix,
-				strings.Replace(input.namespace, "/", ".", -1),
-				input.resource,
-				k,
-				input.aggregation,
-			},
-			".",
+		metricKey := strings.Replace(
+			strings.Join(
+				[]string{
+					prefix,
+					input.namespace,
+					input.resource,
+					k,
+					input.aggregation,
+				},
+				".",
+			),
+			"/", "", -1,
 		)
 		metricKey = strings.Replace(metricKey, " ", "", -1)
 
