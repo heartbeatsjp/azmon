@@ -6,10 +6,18 @@ A tool for Azure Monitor at Microsoft Azure that possible to collects metrics, a
 
 ## Usage
 
+azmon has two sub-commands named `check` and `metric`. When invoke sub-commands must be specified global options (see [Global options](#globaloptions)).  
+
+`azmon check` can check metric data as Nagios plugin. You specify the target metric name in `--metric-name` option.  
+Also, `azmon check` provides options `--*-over` and `--*-under`, because whether should we check "over than threshold" or "under than threshold" is different by type of metric data.    
+
 ```bash
 $ azmon <global options> check --metric-name "Percentage CPU" --warning-over 70 --critical-over 90
 CRITICAL - <resource name> Percentage CPU is 95.885000 that over than 90.000000
 ```
+
+`azmon metric` can print metric data Sensu plugin format.  
+The `--metric-names` option can specify one or more metric data comma separated. When not use `--metric-names` option, target metric data is  all of the  metric data contained namespace.        
 
 ```bash
 $ azmon <global options> metric --metric-names "Percentage CPU,Network In,Network Out,Disk Read Bytes"
@@ -71,7 +79,7 @@ Options
 azmon fetches metric data from Azure API, that required authentication with Azure API.    
 
 [azure-sdk-for-go](https://github.com/Azure/azure-sdk-for-go) used in azmon provides several authentication methods.  
-azmon supports file-based authentication.        
+Currently azmon supports **file-based authentication** only.  
 https://docs.microsoft.com/en-us/go/azure/azure-sdk-go-authorization#use-file-based-authentication  
 
 Generate auth file can run below command.   
