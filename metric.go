@@ -11,15 +11,7 @@ import (
 func Metric(c *cli.Context) error {
 	input := buildFetchMetricDataInput(c)
 
-	v, err := FetchMetricData(
-		context.TODO(),
-		input.subscriptionID,
-		input.resourceGroup,
-		input.namespace,
-		input.resource,
-		input.metricName,
-		input.aggregation,
-	)
+	v, err := FetchMetricData(context.TODO(), input)
 	if err != nil {
 		return fmt.Errorf("fetch metric data failed: %s", err.Error())
 	}

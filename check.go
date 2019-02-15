@@ -23,15 +23,7 @@ func Check(c *cli.Context) error {
 	criticalOver := c.Float64("critical-over")
 	criticalUnder := c.Float64("critical-under")
 
-	v, err := FetchMetricData(
-		context.TODO(),
-		input.subscriptionID,
-		input.resourceGroup,
-		input.namespace,
-		input.resource,
-		input.metricName,
-		input.aggregation,
-	)
+	v, err := FetchMetricData(context.TODO(), input)
 	if err != nil {
 		return cli.NewExitError(fmt.Errorf("fetch metric data failed: %s", err.Error()), UNKNOWN)
 	}
