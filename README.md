@@ -1,10 +1,23 @@
 azmon
 =====
 
-A tool for Azure Monitor at Microsoft Azure that possible to collects metrics, and checks(as Nagios plugin) it.
+A tool for Azure Monitor at Microsoft Azure that possible to collects metrics, and checks (as Nagios plugin) it.
 
 
 ## Usage
+
+```bash
+$ azmon <global options> check --metric-name "Percentage CPU" --warning-over 70 --critical-over 90
+CRITICAL - <resource name> Percentage CPU is 95.885000 that over than 90.000000
+```
+
+```bash
+$ azmon <global options> metric --metric-names "Percentage CPU,Network In,Network Out,Disk Read Bytes"
+azure.Microsoft.ComputevirtualMachines.<resource name>.PercentageCPU.Average     5.932500        1550223420
+azure.Microsoft.ComputevirtualMachines.<resource name>.NetworkIn.Average         37235.038462    1550223420
+azure.Microsoft.ComputevirtualMachines.<resource name>.NetworkOut.Average        5743.250000     1550223420
+azure.Microsoft.ComputevirtualMachines.<resource name>.DiskReadBytes.Average     0.000000        1550223420
+```
 
 ### Global options
 
@@ -16,8 +29,6 @@ A tool for Azure Monitor at Microsoft Azure that possible to collects metrics, a
     - Set the metric namespace
 - `--resource`
     - Set the target resource name
-- `--metric-name`
-    - Set the name of the metric
 - `--aggregation`
     - Set the aggregation type. Choose from "Total", "Average", "Maximum", "Minimum" ("Count" is not supported)"
 - `--auth-file`
@@ -26,17 +37,33 @@ A tool for Azure Monitor at Microsoft Azure that possible to collects metrics, a
 
 ### Subcommands
 
-`check`
+#### check
 
-```
-azmon <global options> check --warning-over <warning threshold> --critical-over <critical threshold>
-```
+`check` sub-command fetches metric data and check it as nagios plugin.  
 
-`metrics`
+Options  
 
-```
-azmon <global options> metrics [--prefix <metric prefix key>]
-```
+- `--metric-name`
+    - Set the name of the metric
+- `--warning-over`
+    - Set the warning threshold. Occur warning level alert when metric data over than threshold 
+- `--warning-under`
+    - Set the warning threshold. Occur warning level alert when metric data under than threshold
+- `--critical-over`
+    - Set the critical threshold. Occur critical level alert when metric data over than threshold
+- `--critical-under`
+    - Set the critical threshold. Occur critical level alert when metric data under than threshold 
+
+#### metric
+
+`metric` sub-command fetches metric data and print it format sensu plugin.
+
+Options  
+
+- `--metric-names`
+    - Set the names of the metric
+- `--prefix`
+    - Set the metric key prefix (default "azure")
 
 
 ### Authentication
