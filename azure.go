@@ -9,6 +9,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/services/preview/monitor/mgmt/2018-11-01-preview/insights"
 	"github.com/Azure/go-autorest/autorest/azure"
 	"github.com/Azure/go-autorest/autorest/azure/auth"
+	"github.com/Azure/go-autorest/autorest/to"
 )
 
 type metricsListInput struct {
@@ -49,8 +50,6 @@ func metricsList(ctx context.Context, params *metricsListInput) (insights.Respon
 
 // FetchMetricData returns metric data
 func FetchMetricData(ctx context.Context, subscriptionID, resourceGroup, namespace, resource, metricName, aggregation string) (*insights.MetricValue, error) {
-	pt1m := "PT1M"
-
 	endTime := time.Now().UTC()
 	startTime := endTime.Add(time.Duration(-5) * time.Minute)
 	timespan := fmt.Sprintf("%s/%s", startTime.Format(time.RFC3339), endTime.Format(time.RFC3339))
@@ -64,7 +63,7 @@ func FetchMetricData(ctx context.Context, subscriptionID, resourceGroup, namespa
 			resource,
 		),
 		timespan:    timespan,
-		interval:    &pt1m,
+		interval:    to.StringPtr("PT1M"),
 		aggregation: aggregation,
 		metricnames: metricName,
 		resultType:  insights.Data,
