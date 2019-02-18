@@ -11,9 +11,14 @@ import (
 func Metric(c *cli.Context) error {
 	input := buildFetchMetricDataInput(c)
 
+	client, err := NewClient(input.subscriptionID)
+	if err != nil {
+		return cli.NewExitError("", UNKNOWN)
+	}
+
 	if len(input.metricNames) < 1 {
 		i := buildFetchMetricDefinitionsInput(c)
-		definitions, err := FetchMetricDefinitions(context.TODO(), i)
+		definitions, err := FetchMetricDefinitions(context.TODO(), client, i)
 		if err != nil {
 			return cli.NewExitError("", 1)
 		}
@@ -23,7 +28,7 @@ func Metric(c *cli.Context) error {
 		}
 	}
 
-	metrics, err := FetchMetricData(context.TODO(), input)
+	metrics, err := FetchMetricData(context.TODO(), client, input)
 	if err != nil {
 		return fmt.Errorf("fetch metric data failed: %s", err.Error())
 	}

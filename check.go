@@ -33,7 +33,11 @@ func Check(c *cli.Context) error {
 	criticalOver := c.Float64("critical-over")
 	criticalUnder := c.Float64("critical-under")
 
-	metrics, err := FetchMetricData(context.TODO(), input)
+	client, err := NewClient(input.subscriptionID)
+	if err != nil {
+		return cli.NewExitError("", UNKNOWN)
+	}
+	metrics, err := FetchMetricData(context.TODO(), client, input)
 	if err != nil {
 		return cli.NewExitError(fmt.Errorf("fetch metric data failed: %s", err.Error()), UNKNOWN)
 	}
