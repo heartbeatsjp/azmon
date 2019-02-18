@@ -68,6 +68,5 @@ func Check(c *cli.Context) error {
 		return cli.NewExitError(fmt.Sprintf("WARNING - %s %s is %f that under than %f", input.resource, input.metricNames[0], data, warningUnder), WARNING)
 	}
 
-	fmt.Printf("OK - %s %s is %f", input.resource, input.metricNames[0], data)
-	return nil
+	return cli.NewExitError(fmt.Sprintf("OK - %s %s is %f", input.resource, input.metricNames[0], data), OK)
 }
