@@ -92,3 +92,8 @@ az ad sp create-for-rbac --sdk-auth > azure.auth
 ```
 
 In the default, azmon reads `/etc/nagios/azure.auth` as auth file. You can change the auth file path by `--auth-file` option.
+
+
+## License
+
+[Apache License 2.0](https://github.com/shiimaxx/azmon/blob/master/LICENSE)
