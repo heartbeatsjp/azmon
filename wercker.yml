@@ -1,0 +1,14 @@
+box: "netmarkjp/golang-build:1.11"
+build:
+  steps:
+    - wercker/setup-go-workspace:
+        package-dir: github.com/shiimaxx/azmon
+    - script:
+        name: "dep ensure"
+        code: "dep ensure"
+    - script:
+        name: "goimports"
+        code: "goimports -d -e $(find . -type f -name '*.go' | grep -v './vendor')"
+    - script:
+        name: "go test"
+        code: "go test -v ./..."
