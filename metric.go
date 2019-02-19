@@ -52,6 +52,7 @@ func _metric(client *Client, dataInput FetchMetricDataInput, defInput FetchMetri
 				[]string{
 					prefix,
 					dataInput.namespace,
+					dataInput.resourceGroup,
 					dataInput.resource,
 					k,
 					dataInput.aggregation,

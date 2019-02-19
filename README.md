@@ -24,10 +24,10 @@ The `--metric-names` option can specify one or more metric data comma separated.
 
 ```bash
 $ azmon <global options> metric --metric-names "Percentage CPU,Network In,Network Out,Disk Read Bytes"
-azure.Microsoft.ComputevirtualMachines.<resource name>.PercentageCPU.Average     5.932500        1550223420
-azure.Microsoft.ComputevirtualMachines.<resource name>.NetworkIn.Average         37235.038462    1550223420
-azure.Microsoft.ComputevirtualMachines.<resource name>.NetworkOut.Average        5743.250000     1550223420
-azure.Microsoft.ComputevirtualMachines.<resource name>.DiskReadBytes.Average     0.000000        1550223420
+azure.Microsoft.ComputevirtualMachines.<resouce group>.<resource name>.PercentageCPU.Average     5.932500        1550223420
+azure.Microsoft.ComputevirtualMachines.<resouce group>.<resource name>.NetworkIn.Average         37235.038462    1550223420
+azure.Microsoft.ComputevirtualMachines.<resouce group>.<resource name>.NetworkOut.Average        5743.250000     1550223420
+azure.Microsoft.ComputevirtualMachines.<resouce group>.<resource name>.DiskReadBytes.Average     0.000000        1550223420
 ```
 
 ### Global options
