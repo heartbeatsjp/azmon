@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 )
@@ -25,7 +24,6 @@ func Test_metric(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Print(got)
 
 	for _, w := range want {
 		if !strings.Contains(got, w) {
