@@ -16,6 +16,11 @@ const (
 )
 
 func Check(c *cli.Context) error {
+	client, err := NewClient(c.GlobalString("subscription-id"))
+	if err != nil {
+		return cli.NewExitError("", UNKNOWN)
+	}
+
 	if c.String("metric-name") == "" {
 		return cli.NewExitError("missing metric-name", UNKNOWN)
 	}
@@ -33,10 +38,10 @@ func Check(c *cli.Context) error {
 	criticalOver := c.Float64("critical-over")
 	criticalUnder := c.Float64("critical-under")
 
-	client, err := NewClient(input.subscriptionID)
-	if err != nil {
-		return cli.NewExitError("", UNKNOWN)
-	}
+	return _check(client, input, warningOver, warningUnder, criticalOver, criticalUnder)
+}
+
+func _check(client *Client, input FetchMetricDataInput, warningOver, warningUnder, criticalOver, criticalUnder float64) error {
 	metrics, err := FetchMetricData(context.TODO(), client, input)
 	if err != nil {
 		return cli.NewExitError(fmt.Errorf("fetch metric data failed: %s", err.Error()), UNKNOWN)
