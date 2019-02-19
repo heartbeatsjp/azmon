@@ -14,6 +14,26 @@ import (
 	"github.com/Azure/go-autorest/autorest/to"
 )
 
+// FetchMetricDataInput is input parameters for FetchMetricData
+type FetchMetricDataInput struct {
+	subscriptionID string
+	resourceGroup  string
+	namespace      string
+	resource       string
+	metricNames    []string
+	aggregation    string
+}
+
+// FetchMetricDefinitionsInput is input parameters for FetchMetricDefinitions
+type FetchMetricDefinitionsInput struct {
+	subscriptionID  string
+	resourceGroup   string
+	namespace       string
+	resource        string
+	resourceURI     string
+	metricnamespace string
+}
+
 // Client is an API Client for Azure
 type Client struct {
 	MetricsClient           insightsapi.MetricsClientAPI
