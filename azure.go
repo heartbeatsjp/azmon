@@ -102,7 +102,7 @@ func FetchMetricDefinitions(ctx context.Context, c *Client, params FetchMetricDe
 }
 
 // FetchMetricData returns metric data
-func FetchMetricData(ctx context.Context, c *Client, params FetchMetricDataInput) (map[string]insights.MetricValue, error) {
+func FetchMetricData(ctx context.Context, c *Client, params FetchMetricDataInput) (map[string]*insights.MetricValue, error) {
 	endTime := time.Now().UTC()
 	startTime := endTime.Add(time.Duration(-5) * time.Minute)
 	timespan := fmt.Sprintf("%s/%s", startTime.Format(time.RFC3339), endTime.Format(time.RFC3339))
@@ -119,7 +119,7 @@ func FetchMetricData(ctx context.Context, c *Client, params FetchMetricDataInput
 		params.metricNames = params.metricNames[metricsCountLimitPerRequest:]
 	}
 
-	metrics := make(map[string]insights.MetricValue)
+	metrics := make(map[string]*insights.MetricValue)
 	for _, m := range metricNames {
 		input := &metricsListInput{
 			subscriptionID: params.subscriptionID,
@@ -166,7 +166,7 @@ func FetchMetricData(ctx context.Context, c *Client, params FetchMetricDataInput
 				//for debug
 				//fmt.Printf("%s: %v\n", *v.Name.Value, latestData)
 				if latestData.TimeStamp != nil {
-					metrics[*v.Name.Value] = latestData
+					metrics[*v.Name.Value] = &latestData
 				}
 			}
 		}
