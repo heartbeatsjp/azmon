@@ -8,6 +8,7 @@ import (
 	"github.com/urfave/cli"
 )
 
+// Return codes that represents service status
 const (
 	OK       = 0
 	WARNING  = 1
@@ -15,6 +16,7 @@ const (
 	UNKNOWN  = 3
 )
 
+// Check checks metric data
 func Check(c *cli.Context) error {
 	client, err := NewClient(c.GlobalString("subscription-id"))
 	if err != nil {

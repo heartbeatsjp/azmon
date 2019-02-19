@@ -9,6 +9,7 @@ import (
 	"github.com/urfave/cli"
 )
 
+// FetchMetricDataInput is input parameters for FetchMetricData
 type FetchMetricDataInput struct {
 	subscriptionID string
 	resourceGroup  string
@@ -18,6 +19,7 @@ type FetchMetricDataInput struct {
 	aggregation    string
 }
 
+// FetchMetricDefinitionsInput is input parameters for FetchMetricDefinitions
 type FetchMetricDefinitionsInput struct {
 	subscriptionID  string
 	resourceGroup   string

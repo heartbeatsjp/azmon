@@ -8,6 +8,7 @@ import (
 	"github.com/urfave/cli"
 )
 
+// Metric prints metric data
 func Metric(c *cli.Context) error {
 	dataInput := buildFetchMetricDataInput(c)
 	defInput := buildFetchMetricDefinitionsInput(c)

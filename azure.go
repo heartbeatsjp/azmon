@@ -83,6 +83,7 @@ func (c *Client) metricsList(ctx context.Context, params *metricsListInput) (ins
 	)
 }
 
+// FetchMetricDefinitions returns metric definitions
 func FetchMetricDefinitions(ctx context.Context, c *Client, params FetchMetricDefinitionsInput) (*[]insights.MetricDefinition, error) {
 	input := &metricDefinitionsListInput{
 		subscriptionID: params.subscriptionID,
@@ -101,7 +102,7 @@ func FetchMetricDefinitions(ctx context.Context, c *Client, params FetchMetricDe
 	return res.Value, nil
 }
 
-// FetchMetricData returns metric data
+// FetchMetricData fetches metric data and returns latest value with metric name as hash key
 func FetchMetricData(ctx context.Context, c *Client, params FetchMetricDataInput) (map[string]*insights.MetricValue, error) {
 	endTime := time.Now().UTC()
 	startTime := endTime.Add(time.Duration(-5) * time.Minute)
