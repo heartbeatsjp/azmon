@@ -9,7 +9,7 @@ A tool for Azure Monitor at Microsoft Azure that possible to collects metrics, a
 
 ## Usage
 
-azmon has two sub-commands named `check` and `metric`. When invoke sub-commands must be specified global options (see [Global options](#globaloptions)).  
+azmon has two sub-commands named `check` and `metric`. When invoke sub-commands must be specified global options (see [Global options](#global-options)).  
 
 `azmon check` can check metric data as Nagios plugin. You specify the target metric name in `--metric-name` option.  
 Also, `azmon check` provides options `--*-over` and `--*-under`, because whether should we check "over than threshold" or "under than threshold" is different by type of metric data.    
