@@ -9,40 +9,51 @@ import (
 )
 
 func Metric(c *cli.Context) error {
-	input := buildFetchMetricDataInput(c)
+	dataInput := buildFetchMetricDataInput(c)
+	defInput := buildFetchMetricDefinitionsInput(c)
 
-	client, err := NewClient(input.subscriptionID)
+	client, err := NewClient(c.GlobalString("subscription-id"))
 	if err != nil {
 		return cli.NewExitError("", UNKNOWN)
 	}
 
-	if len(input.metricNames) < 1 {
-		i := buildFetchMetricDefinitionsInput(c)
-		definitions, err := FetchMetricDefinitions(context.TODO(), client, i)
+	output, merr := _metric(client, dataInput, defInput, c.String("prefix"))
+	if merr != nil {
+		return merr
+	}
+
+	fmt.Print(output)
+
+	return nil
+}
+
+func _metric(client *Client, dataInput FetchMetricDataInput, defInput FetchMetricDefinitionsInput, prefix string) (string, error) {
+	if len(dataInput.metricNames) < 1 {
+		definitions, err := FetchMetricDefinitions(context.TODO(), client, defInput)
 		if err != nil {
-			return cli.NewExitError("", 1)
+			return "", cli.NewExitError(fmt.Sprintf("fetch metric definitions failed: %s", err.Error()), 1)
 		}
 
 		for _, d := range *definitions {
-			input.metricNames = append(input.metricNames, *d.Name.Value)
+			dataInput.metricNames = append(dataInput.metricNames, *d.Name.Value)
 		}
 	}
 
-	metrics, err := FetchMetricData(context.TODO(), client, input)
+	metrics, err := FetchMetricData(context.TODO(), client, dataInput)
 	if err != nil {
-		return fmt.Errorf("fetch metric data failed: %s", err.Error())
+		return "", cli.NewExitError(fmt.Sprintf("fetch metric data failed: %s", err.Error()), 1)
 	}
 
+	var output string
 	for k, v := range metrics {
-		prefix := c.String("prefix")
 		metricKey := strings.Replace(
 			strings.Join(
 				[]string{
 					prefix,
-					input.namespace,
-					input.resource,
+					dataInput.namespace,
+					dataInput.resource,
 					k,
-					input.aggregation,
+					dataInput.aggregation,
 				},
 				".",
 			),
@@ -51,7 +62,7 @@ func Metric(c *cli.Context) error {
 		metricKey = strings.Replace(metricKey, " ", "", -1)
 
 		var data float64
-		switch input.aggregation {
+		switch dataInput.aggregation {
 		case "Total":
 			data = *v.Total
 		case "Average":
@@ -62,8 +73,8 @@ func Metric(c *cli.Context) error {
 			data = *v.Minimum
 		}
 
-		fmt.Printf("%s\t%f\t%d\n", metricKey, data, v.TimeStamp.Unix())
+		output += fmt.Sprintf("%s\t%f\t%d\n", metricKey, data, v.TimeStamp.Unix())
 	}
 
-	return nil
+	return output, nil
 }
