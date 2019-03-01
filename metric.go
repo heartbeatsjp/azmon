@@ -8,6 +8,11 @@ import (
 	"github.com/urfave/cli"
 )
 
+// Exit codes are int values that represent an exit code for a particular error.
+const (
+	ExitCodeError = 10 + iota
+)
+
 // Metric prints metric data
 func Metric(c *cli.Context) error {
 	dataInput := buildFetchMetricDataInput(c)
@@ -32,7 +37,7 @@ func _metric(client *Client, dataInput FetchMetricDataInput, defInput FetchMetri
 	if len(dataInput.metricNames) < 1 {
 		definitions, err := FetchMetricDefinitions(context.TODO(), client, defInput)
 		if err != nil {
-			return "", cli.NewExitError(fmt.Sprintf("fetch metric definitions failed: %s", err.Error()), 1)
+			return "", cli.NewExitError(fmt.Sprintf("fetch metric definitions failed: %s", err.Error()), ExitCodeError)
 		}
 
 		for _, d := range *definitions {
@@ -42,7 +47,7 @@ func _metric(client *Client, dataInput FetchMetricDataInput, defInput FetchMetri
 
 	metrics, err := FetchMetricData(context.TODO(), client, dataInput)
 	if err != nil {
-		return "", cli.NewExitError(fmt.Sprintf("fetch metric data failed: %s", err.Error()), 1)
+		return "", cli.NewExitError(fmt.Sprintf("fetch metric data failed: %s", err.Error()), ExitCodeError)
 	}
 
 	var output string
