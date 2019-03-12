@@ -20,7 +20,7 @@ func Metric(c *cli.Context) error {
 
 	client, err := NewClient(c.GlobalString("subscription-id"))
 	if err != nil {
-		return cli.NewExitError("", UNKNOWN)
+		return cli.NewExitError(fmt.Sprintf("create azure client failed: %s", err.Error()), ExitCodeError)
 	}
 
 	output, merr := _metric(client, dataInput, defInput, c.String("prefix"))
