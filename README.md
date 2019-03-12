@@ -96,4 +96,4 @@ In the default, azmon reads `/etc/nagios/azure.auth` as auth file. You can chang
 
 ## License
 
-[Apache License 2.0](https://github.com/shiimaxx/azmon/blob/master/LICENSE)
+[Apache License 2.0](https://github.com/heartbeatsjp/azmon/blob/master/LICENSE)
