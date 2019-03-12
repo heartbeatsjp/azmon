@@ -9,6 +9,15 @@ import (
 	"github.com/urfave/cli"
 )
 
+const (
+	// Name is the application name
+	Name = "azmon"
+	// Usage is the application usage
+	Usage = "A tool for Azure Monitor at Microsoft Azure"
+	// Version is the application version
+	Version = "0.0.0"
+)
+
 func buildFetchMetricDataInput(c *cli.Context) FetchMetricDataInput {
 	//subCommand := strings.Split(c.Args().First(), " ")[0]
 	subCommand := c.Parent().Args().First()
@@ -83,6 +92,9 @@ func appBefore(c *cli.Context) error {
 
 func main() {
 	app := cli.NewApp()
+	app.Name = Name
+	app.Usage = Usage
+	app.Version = Version
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
