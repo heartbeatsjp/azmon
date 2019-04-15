@@ -1,7 +1,7 @@
 azmon
 =====
 
-[![wercker status](https://app.wercker.com/status/f2d41c7ab49ea52b37a0565b4a8a1bc4/s/master "wercker status")](https://app.wercker.com/project/byKey/f2d41c7ab49ea52b37a0565b4a8a1bc4)
+[![wercker status](https://app.wercker.com/status/f0d2e3e1f30c2fbd9e452d571ac6843e/s/master "wercker status")](https://app.wercker.com/project/byKey/f0d2e3e1f30c2fbd9e452d571ac6843e)
 [![Go Report Card](https://goreportcard.com/badge/github.com/heartbeatsjp/azmon)](https://goreportcard.com/report/github.com/heartbeatsjp/azmon)
 
 A tool for Azure Monitor at Microsoft Azure that possible to collects metrics, and checks (as Nagios plugin) it.  
