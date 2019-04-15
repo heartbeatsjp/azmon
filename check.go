@@ -20,7 +20,7 @@ const (
 func Check(c *cli.Context) error {
 	client, err := NewClient(c.GlobalString("subscription-id"))
 	if err != nil {
-		return cli.NewExitError("", UNKNOWN)
+		return cli.NewExitError(fmt.Sprintf("construct api client failed: %s", err.Error()), UNKNOWN)
 	}
 
 	if c.String("metric-name") == "" {
@@ -28,8 +28,7 @@ func Check(c *cli.Context) error {
 	}
 
 	if strings.Contains(c.String("metric-name"), ",") {
-		//TODO: error message
-		return cli.NewExitError("TODO", UNKNOWN)
+		return cli.NewExitError("the metric-name option can only specify a single metric name", UNKNOWN)
 	}
 
 	input := buildFetchMetricDataInput(c)
@@ -46,7 +45,7 @@ func Check(c *cli.Context) error {
 func _check(client *Client, input FetchMetricDataInput, warningOver, warningUnder, criticalOver, criticalUnder float64) error {
 	metrics, err := FetchMetricData(context.TODO(), client, input)
 	if err != nil {
-		return cli.NewExitError(fmt.Errorf("fetch metric data failed: %s", err.Error()), UNKNOWN)
+		return cli.NewExitError(fmt.Sprintf("fetch metric data failed: %s", err.Error()), UNKNOWN)
 	}
 
 	v := metrics[input.metricNames[0]]
