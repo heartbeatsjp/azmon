@@ -72,9 +72,9 @@ func (c *fakeMetricsClient) List(ctx context.Context, resourceURI string, timesp
 func (c *fakeMetricDefinitionsClient) List(ctx context.Context, resourceURI string, metricnamespace string) (insights.MetricDefinitionCollection, error) {
 	return insights.MetricDefinitionCollection{
 		Value: &[]insights.MetricDefinition{
-			{Name: &insights.LocalizableString{Value: to.StringPtr("Percentage CPU")}},
-			{Name: &insights.LocalizableString{Value: to.StringPtr("Network In")}},
-			{Name: &insights.LocalizableString{Value: to.StringPtr("Network Out")}},
+			{Name: &insights.LocalizableString{Value: to.StringPtr("Percentage CPU")}, IsDimensionRequired: to.BoolPtr(false)},
+			{Name: &insights.LocalizableString{Value: to.StringPtr("Network In")}, IsDimensionRequired: to.BoolPtr(false)},
+			{Name: &insights.LocalizableString{Value: to.StringPtr("Network Out")}, IsDimensionRequired: to.BoolPtr(false)},
 		},
 	}, nil
 }
