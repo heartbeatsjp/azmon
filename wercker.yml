@@ -12,3 +12,9 @@ build:
     - script:
         name: "go test"
         code: "go test -v ./..."
+deploy:
+    steps:
+    - tcnksm/ghr:
+        input: dist
+        replace: true
+        token: $GITHUB_TOKEN
