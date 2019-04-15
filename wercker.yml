@@ -2,7 +2,7 @@ box: "netmarkjp/golang-build:1.11"
 build:
   steps:
     - wercker/setup-go-workspace:
-        package-dir: github.com/shiimaxx/azmon
+        package-dir: github.com/heartbeatsjp/azmon
     - script:
         name: "dep ensure"
         code: "dep ensure"
