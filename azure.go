@@ -184,8 +184,7 @@ func FetchMetricData(ctx context.Context, c *Client, params FetchMetricDataInput
 						latestData = d
 					}
 				}
-				//for debug
-				//fmt.Printf("%s: %v\n", *v.Name.Value, latestData)
+
 				if latestData.TimeStamp != nil {
 					metrics[*v.Name.Value] = &latestData
 				}

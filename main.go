@@ -19,7 +19,6 @@ const (
 )
 
 func buildFetchMetricDataInput(c *cli.Context) FetchMetricDataInput {
-	//subCommand := strings.Split(c.Args().First(), " ")[0]
 	subCommand := c.Parent().Args().First()
 
 	var metricNames []string
