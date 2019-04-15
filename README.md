@@ -73,6 +73,8 @@ Options
 
 - `--metric-names`
     - Set the names of the metric
+    - When omitting this option, print metric data contains in metric namespace specified by the global option
+        - However except metrics that required dimension
 - `--prefix`
     - Set the metric key prefix (default "azure")
 
