@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/urfave/cli"
@@ -23,34 +24,40 @@ func Metric(c *cli.Context) error {
 		return cli.NewExitError(fmt.Sprintf("construct api client failed: %s", err.Error()), ExitCodeError)
 	}
 
-	output, merr := _metric(client, dataInput, defInput, c.String("prefix"))
+	stdout, stderr, merr := _metric(client, dataInput, defInput, c.String("prefix"))
 	if merr != nil {
 		return merr
 	}
 
-	fmt.Print(output)
+	fmt.Fprint(os.Stderr, stderr)
+	fmt.Fprint(os.Stdout, stdout)
 
 	return nil
 }
 
-func _metric(client *Client, dataInput FetchMetricDataInput, defInput FetchMetricDefinitionsInput, prefix string) (string, error) {
+func _metric(client *Client, dataInput FetchMetricDataInput, defInput FetchMetricDefinitionsInput, prefix string) (string, string, error) {
+	var stderr string
 	if len(dataInput.metricNames) < 1 {
 		definitions, err := FetchMetricDefinitions(context.TODO(), client, defInput)
 		if err != nil {
-			return "", cli.NewExitError(fmt.Sprintf("fetch metric definitions failed: %s", err.Error()), ExitCodeError)
+			return "", "", cli.NewExitError(fmt.Sprintf("fetch metric definitions failed: %s", err.Error()), ExitCodeError)
 		}
 
 		for _, d := range *definitions {
-			dataInput.metricNames = append(dataInput.metricNames, *d.Name.Value)
+			if *d.IsDimensionRequired {
+				stderr += fmt.Sprintf("skip fetch metric: %s does not accept zero dimension case\n", *d.Name.Value)
+			} else {
+				dataInput.metricNames = append(dataInput.metricNames, *d.Name.Value)
+			}
 		}
 	}
 
 	metrics, err := FetchMetricData(context.TODO(), client, dataInput)
 	if err != nil {
-		return "", cli.NewExitError(fmt.Sprintf("fetch metric data failed: %s", err.Error()), ExitCodeError)
+		return "", "", cli.NewExitError(fmt.Sprintf("fetch metric data failed: %s", err.Error()), ExitCodeError)
 	}
 
-	var output string
+	var stdout string
 	for k, v := range metrics {
 		metricKey := strings.Replace(
 			strings.Join(
@@ -80,8 +87,8 @@ func _metric(client *Client, dataInput FetchMetricDataInput, defInput FetchMetri
 			data = *v.Minimum
 		}
 
-		output += fmt.Sprintf("%s\t%f\t%d\n", metricKey, data, v.TimeStamp.Unix())
+		stdout += fmt.Sprintf("%s\t%f\t%d\n", metricKey, data, v.TimeStamp.Unix())
 	}
 
-	return output, nil
+	return stdout, stderr, nil
 }
