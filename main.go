@@ -128,7 +128,7 @@ func main() {
 	app.Commands = []cli.Command{
 		{
 			Name:  "check",
-			Usage: "check metric(as Nagios plugin)",
+			Usage: "check metric data as Nagios plugin",
 			Flags: []cli.Flag{
 				cli.StringFlag{
 					Name:  "metric-name, m",
@@ -159,7 +159,7 @@ func main() {
 		},
 		{
 			Name:  "metric",
-			Usage: "list metric data",
+			Usage: "print metric data in Sensu plugin format",
 			Flags: []cli.Flag{
 				cli.StringSliceFlag{
 					Name:  "metric-names, m",
