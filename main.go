@@ -15,7 +15,7 @@ const (
 	// Usage is the application usage
 	Usage = "A tool for Azure Monitor at Microsoft Azure"
 	// Version is the application version
-	Version = "0.0.0"
+	Version = "1.0.0"
 )
 
 func buildFetchMetricDataInput(c *cli.Context) FetchMetricDataInput {
