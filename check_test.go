@@ -169,3 +169,27 @@ func Test_check(t *testing.T) {
 		})
 	}
 }
+
+func Test_check_no_datapoint(t *testing.T) {
+	t.Run("no datapoint", func(t *testing.T) {
+		err := _check(
+			NewFakeClient(&[]insights.Metric{}), // empty metric data
+			FetchMetricDataInput{
+				metricNames: []string{"Network In"},
+				aggregation: "Average",
+			}, 0, 0, 0, 0)
+		if err == nil {
+			t.Error("error")
+		}
+		if eerr, ok := err.(*cli.ExitError); ok {
+			if eerr.ExitCode() != UNKNOWN {
+				t.Errorf("ExitCode want %d, got %d\n", UNKNOWN, eerr.ExitCode())
+			}
+			if eerr.Error() != "UNKNOWN - No datapoint" {
+				t.Errorf("ExitCode want %s, got %s\n", "no datapoint", eerr.Error())
+			}
+		} else {
+			t.Errorf("Invalid error type")
+		}
+	})
+}
