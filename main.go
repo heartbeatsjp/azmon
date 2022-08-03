@@ -61,7 +61,7 @@ func convertToTime(n int64) time.Time {
 		return now.Add(time.Duration(n) * time.Second)
 	} else {
 		// timestamp
-		return time.Unix(n, 0)
+		return time.Unix(n, 0).UTC()
 	}
 }
 
