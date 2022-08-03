@@ -141,12 +141,12 @@ func main() {
 		},
 		cli.Int64Flag{
 			Name:  "start-time",
-			Usage: "if less than or equal to 0, then relative, else the timestamp",
+			Usage: "Set the start time as unix timestamp, relative from now if 0 or negative value given",
 			Value: -300,
 		},
 		cli.Int64Flag{
 			Name:  "end-time",
-			Usage: "if less than or equal to 0, then relative, else the timestamp",
+			Usage: "Set the end time as unix timestamp, relative from now if 0 or negative value given",
 			Value: 0,
 		},
 		cli.IntFlag{
