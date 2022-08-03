@@ -22,6 +22,9 @@ type FetchMetricDataInput struct {
 	resource       string
 	metricNames    []string
 	aggregation    string
+	startTime      time.Time
+	endTime        time.Time
+	interval       int
 }
 
 // FetchMetricDefinitionsInput is input parameters for FetchMetricDefinitions
@@ -32,6 +35,9 @@ type FetchMetricDefinitionsInput struct {
 	resource        string
 	resourceURI     string
 	metricnamespace string
+	startTime       time.Time
+	endTime         time.Time
+	interval        int
 }
 
 // Client is an API Client for Azure
@@ -124,9 +130,7 @@ func FetchMetricDefinitions(ctx context.Context, c *Client, params FetchMetricDe
 
 // FetchMetricData fetches metric data and returns latest value with metric name as hash key
 func FetchMetricData(ctx context.Context, c *Client, params FetchMetricDataInput) (map[string]*insights.MetricValue, error) {
-	endTime := time.Now().UTC()
-	startTime := endTime.Add(time.Duration(-5) * time.Minute)
-	timespan := fmt.Sprintf("%s/%s", startTime.Format(time.RFC3339), endTime.Format(time.RFC3339))
+	timespan := fmt.Sprintf("%s/%s", params.startTime.Format(time.RFC3339), params.endTime.Format(time.RFC3339))
 
 	var metricNames []string
 	const metricsCountLimitPerRequest int = 20
@@ -151,7 +155,7 @@ func FetchMetricData(ctx context.Context, c *Client, params FetchMetricDataInput
 				params.resource,
 			),
 			timespan:    timespan,
-			interval:    to.StringPtr("PT1M"),
+			interval:    to.StringPtr(fmt.Sprintf("PT%dS", params.interval)),
 			aggregation: params.aggregation,
 			metricnames: m,
 			resultType:  insights.Data,
