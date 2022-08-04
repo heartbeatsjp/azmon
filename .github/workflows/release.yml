@@ -1,0 +1,30 @@
+name: Release
+
+on:
+  push:
+    tags:
+    - "[0-9].[0-9]+.[0-9]+"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+      - name: Test
+        run: go test -v ./...
+      - name: Build and compress
+        run: |
+        mkdir linux_amd64
+        GCO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -ldflags '-X main.Version=$(git describe --tags)' -o linux_amd64/${{ github.event.repository.name }} ./...
+        tar czf azmon_linux_amd64.tar.gz linux_amd64
+        ls
+        ls linux_amd64
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: false
+          files: azmon_linux_amd64.tar.gz
