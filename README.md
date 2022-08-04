@@ -45,7 +45,12 @@ azure.Microsoft.ComputevirtualMachines.<resouce group>.<resource name>.DiskReadB
 - `--auth-file`
     - Set the azure auth file path (default "/etc/nagios/azure.auth")
     - See also [Authentication](#authentication)
-
+- `--start-time`
+    - Set the start time as unix timestamp, relative from now if 0 or negative value given (default -300)
+- `--end-time`
+    - Set the end time as unix timestamp, relative from now if 0 or negative value given (default 0)
+- `interval-sec`
+    - Set the interval seconds (supported ones are: 60,300,900,1800,3600,21600,43200,86400. default 60)
 ### Subcommands
 
 #### check

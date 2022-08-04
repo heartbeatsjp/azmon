@@ -48,7 +48,10 @@ func _check(client *Client, input FetchMetricDataInput, warningOver, warningUnde
 		return cli.NewExitError(fmt.Sprintf("fetch metric data failed: %s", err.Error()), UNKNOWN)
 	}
 
-	v := metrics[input.metricNames[0]]
+	v, ok := metrics[input.metricNames[0]]
+	if !ok {
+		return cli.NewExitError("UNKNOWN - No datapoint", UNKNOWN)
+	}
 
 	var data float64
 	switch input.aggregation {

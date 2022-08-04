@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/urfave/cli"
 )
@@ -35,6 +36,9 @@ func buildFetchMetricDataInput(c *cli.Context) FetchMetricDataInput {
 		resource:       c.GlobalString("resource"),
 		metricNames:    metricNames,
 		aggregation:    c.GlobalString("aggregation"),
+		startTime:      convertToTime(c.GlobalInt64("start-time")),
+		endTime:        convertToTime(c.GlobalInt64("end-time")),
+		interval:       c.GlobalInt("interval-sec"),
 	}
 }
 
@@ -44,6 +48,20 @@ func buildFetchMetricDefinitionsInput(c *cli.Context) FetchMetricDefinitionsInpu
 		resourceGroup:  c.GlobalString("resource-group"),
 		namespace:      c.GlobalString("namespace"),
 		resource:       c.GlobalString("resource"),
+		startTime:      convertToTime(c.GlobalInt64("start-time")),
+		endTime:        convertToTime(c.GlobalInt64("end-time")),
+		interval:       c.GlobalInt("interval-sec"),
+	}
+}
+
+func convertToTime(n int64) time.Time {
+	if n <= 0 {
+		// relative
+		now := time.Now().UTC()
+		return now.Add(time.Duration(n) * time.Second)
+	} else {
+		// timestamp
+		return time.Unix(n, 0).UTC()
 	}
 }
 
@@ -120,6 +138,21 @@ func main() {
 			Name:  "auth-file",
 			Usage: "Set the azure auth file path",
 			Value: "/etc/nagios/azure.auth",
+		},
+		cli.Int64Flag{
+			Name:  "start-time",
+			Usage: "Set the start time as unix timestamp, relative from now if 0 or negative value given",
+			Value: -300,
+		},
+		cli.Int64Flag{
+			Name:  "end-time",
+			Usage: "Set the end time as unix timestamp, relative from now if 0 or negative value given",
+			Value: 0,
+		},
+		cli.IntFlag{
+			Name:  "interval-sec",
+			Usage: "interval second (supported ones are: 60,300,900,1800,3600,21600,43200,86400)",
+			Value: 60,
 		},
 	}
 

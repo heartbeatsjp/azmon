@@ -21,7 +21,7 @@ func Test_metric(t *testing.T) {
 		"azure.Microsoft.ComputevirtualMachines.testrg.testvm.NetworkOut.Average	1000.000000	1550223420",
 	}
 
-	stdout, stderr, err := _metric(NewFakeClient(), dataInput, defInput, "azure")
+	stdout, stderr, err := _metric(NewFakeClient(getFakeData()), dataInput, defInput, "azure")
 	if err != nil {
 		t.Error(err)
 	}
