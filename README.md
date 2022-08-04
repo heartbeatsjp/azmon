@@ -1,7 +1,6 @@
 azmon
 =====
 
-[![wercker status](https://app.wercker.com/status/c734acd73bb51fb728351ac8be88d83d/s/master "wercker status")](https://app.wercker.com/project/byKey/c734acd73bb51fb728351ac8be88d83d)
 [![Go Report Card](https://goreportcard.com/badge/github.com/heartbeatsjp/azmon)](https://goreportcard.com/report/github.com/heartbeatsjp/azmon)
 
 A tool for Azure Monitor at Microsoft Azure that possible to collect metrics and check it.  
