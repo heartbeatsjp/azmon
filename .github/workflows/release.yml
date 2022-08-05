@@ -4,10 +4,6 @@ on:
   push:
     tags:
     - "[0-9]+.[0-9]+.[0-9]+"
-  workflow_run:
-    workflows: ["Build and test"]
-    types: 
-      - completed
 
 jobs:
   release:
