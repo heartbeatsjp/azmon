@@ -25,6 +25,7 @@ type FetchMetricDataInput struct {
 	startTime      time.Time
 	endTime        time.Time
 	interval       int
+	filter         string
 }
 
 // FetchMetricDefinitionsInput is input parameters for FetchMetricDefinitions
@@ -35,9 +36,6 @@ type FetchMetricDefinitionsInput struct {
 	resource        string
 	resourceURI     string
 	metricnamespace string
-	startTime       time.Time
-	endTime         time.Time
-	interval        int
 }
 
 // Client is an API Client for Azure
@@ -159,6 +157,7 @@ func FetchMetricData(ctx context.Context, c *Client, params FetchMetricDataInput
 			aggregation: params.aggregation,
 			metricnames: m,
 			resultType:  insights.Data,
+			filter:      params.filter,
 		}
 		res, err := c.metricsList(ctx, input)
 		if err != nil {
