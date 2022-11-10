@@ -40,6 +40,7 @@ func buildFetchMetricDataInput(c *cli.Context) FetchMetricDataInput {
 		startTime:      convertToTime(c.GlobalInt64("start-time")),
 		endTime:        convertToTime(c.GlobalInt64("end-time")),
 		interval:       c.GlobalInt("interval-sec"),
+		filter:         c.GlobalString("filter"),
 	}
 }
 
@@ -49,9 +50,6 @@ func buildFetchMetricDefinitionsInput(c *cli.Context) FetchMetricDefinitionsInpu
 		resourceGroup:  c.GlobalString("resource-group"),
 		namespace:      c.GlobalString("namespace"),
 		resource:       c.GlobalString("resource"),
-		startTime:      convertToTime(c.GlobalInt64("start-time")),
-		endTime:        convertToTime(c.GlobalInt64("end-time")),
-		interval:       c.GlobalInt("interval-sec"),
 	}
 }
 
@@ -154,6 +152,10 @@ func main() {
 			Name:  "interval-sec",
 			Usage: "interval second (supported ones are: 60,300,900,1800,3600,21600,43200,86400)",
 			Value: 60,
+		},
+		cli.StringFlag{
+			Name:  "filter",
+			Usage: "Set the filter",
 		},
 	}
 
